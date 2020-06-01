@@ -219,6 +219,11 @@ def process_sidecar_files(debug=False):
 	delete_empty_folders()
 	return 
 
+
+
+####### EDIT FROM HERE DOWN ONLY ##############
+
+
 ### set to the full path of the canonical master
 master = r"C:\projects\test_folders\test_master"
 
@@ -226,7 +231,7 @@ master = r"C:\projects\test_folders\test_master"
 sidecar = r"C:\projects\test_folders\test_sidecar"
 
 ### set to a useful name for your project   
-project_name_for_log = "test_v2"
+project_name_for_log = "my_project_name"
 
 
 
@@ -245,16 +250,16 @@ project_name_for_log = "test_v2"
 verbose = True
 
 ### if True  does moves/deletes - set to False for testing / dry runs 
-commit = True
+commit = False
 
 ### if True checks for fixity throughout sets -  if fixity found - doesn't move, just logs
-use_low_conf_fixity = False
+use_low_conf_fixity = True
 
 ### if True checks for filename throughout sets - if filename found - doesn't move, just logs. 
-use_low_conf_file_name = False
+use_low_conf_file_name = True
 
 ### if True checks for file_id (filename, no file extention) throughout sets - if fileid found - doesn't move, just logs
-use_low_conf_file_id = False
+use_low_conf_file_id = True
 
 
 process_sidecar_files(debug=False)
