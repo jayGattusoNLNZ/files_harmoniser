@@ -160,8 +160,25 @@ def do_purge_logs():
 			os.remove(log_path)
 	print("\nFinished cleaning up logs \n")
 
-def process_sidecar_files(debug=False):
 
+def summeriser(master_files, sidecar_files):
+	print ("\n*** Results ***\n") 
+	print (f"Total files in master: {len(master_files)}")
+	print (f"Total files in sidecar: {len(sidecar_files)}")
+	print ()
+	for f in os.listdir(logs_folder):
+		if f.startswith(project_name_for_log):
+			log_path = os.path.join(logs_folder, f)
+
+			with open(log_path) as data:
+				lines = [x for x in data.read().split("\n") if x != ""]
+			count = len(lines)-1
+			my_string = f.replace(f"{project_name_for_log}_#_", "").replace(".log", "").replace("_", " ").capitalize()
+			print (f"{my_string}: {count}")
+
+
+
+def process_sidecar_files(debug=False):
 	if purge_logs:
 
 		do_purge_logs()
@@ -230,6 +247,7 @@ def process_sidecar_files(debug=False):
 	delete_empty_folders()
 	delete_empty_folders()
 	print ()
+	summeriser(master_files, sidecar_files)
 	return 
 
 
@@ -266,7 +284,7 @@ verbose = True
 collisons_only = True
 
 ### if True  does moves/deletes - set to False for testing / dry runs 
-commit = True
+commit = False
 
 ### if True checks for fixity throughout sets -  if fixity found - doesn't move, just logs
 use_low_conf_fixity = True
