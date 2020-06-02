@@ -179,6 +179,7 @@ def summeriser(master_files, sidecar_files):
 
 
 def process_sidecar_files(debug=False):
+
 	if purge_logs:
 
 		do_purge_logs()
@@ -266,7 +267,7 @@ project_name_for_log = "socials"
 
 
 
-### N.B. These are both global controls. They are inhereted for all processing outcomes
+### N.B. verbose and commit are global controls. They are inhereted for all processing outcomes
 ### you can change the various processing outcomes to not use the global value in the main process
 ### e.g. you might want to log all deletes to screen only by doing:
 ###	
@@ -284,7 +285,7 @@ verbose = True
 collisons_only = True
 
 ### if True  does moves/deletes - set to False for testing / dry runs 
-commit = False
+commit = True
 
 ### if True checks for fixity throughout sets -  if fixity found - doesn't move, just logs
 use_low_conf_fixity = True
@@ -296,6 +297,7 @@ use_low_conf_file_name = True
 use_low_conf_file_id = True
 
 ### use to clear any existing logs before running - useful when going from commit = False to commit = True
+### double check you have set the correct project_name_for_log...  
 purge_logs = True
 
 process_sidecar_files(debug=False)
