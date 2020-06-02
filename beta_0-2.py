@@ -62,7 +62,7 @@ def delete_and_log(my_file, md5, commit=False, verbose=False):
 		data.write(f"{my_file}|{md5}|{datetime.datetime.now()}\n")
 	if commit:
 		os.remove(my_file)
-	if verbose:
+	if verbose and not collisons_only:
 		print (f"Deleting dup: {my_file}")
 
 def filepath_exists_changed_file(my_file, master_md5, sidecar_md5, commit=False, verbose=False):
@@ -140,7 +140,7 @@ def move_and_log(my_file, md5, commit=False, verbose=False):
 			os.makedirs(folder)
 		shutil.move(os.path.join(sidecar, my_file), os.path.join(master, my_file)) 
 	
-	if verbose:
+	if verbose and not collisons_only:
 		print (f"Moving new: {my_file}")
 
 def delete_empty_folders():
@@ -152,7 +152,19 @@ def delete_empty_folders():
 		if len(os.listdir(folder)) == 0:
 			os.rmdir(folder)
 
+def do_purge_logs():
+	for f in os.listdir(logs_folder):
+		if f.startswith(project_name_for_log):
+			log_path = os.path.join(logs_folder, f)
+			print (f"Purged log file {f}")
+			os.remove(log_path)
+	print("\nFinished cleaning up logs \n")
+
 def process_sidecar_files(debug=False):
+
+	if purge_logs:
+
+		do_purge_logs()
 
 	master_files, master_hashes, master_names, master_ids = get_files_and_folders_from_root(master)
 	sidecar_files, sidecar_hashes, sidecar_names, sidecar_ids = get_files_and_folders_from_root(sidecar)
@@ -217,6 +229,7 @@ def process_sidecar_files(debug=False):
 
 	delete_empty_folders()
 	delete_empty_folders()
+	print ()
 	return 
 
 
@@ -225,13 +238,13 @@ def process_sidecar_files(debug=False):
 
 
 ### set to the full path of the canonical master
-master = r"C:\projects\test_folders\test_master"
+master = r"C:\projects\ghost_collections\rebuilds\socials\master"
 
 ### set to the folder you want to merge
-sidecar = r"C:\projects\test_folders\test_sidecar"
+sidecar = r"C:\projects\ghost_collections\rebuilds\socials\side_car_1"
 
 ### set to a useful name for your project   
-project_name_for_log = "my_project_name"
+project_name_for_log = "socials"
 
 
 
@@ -249,8 +262,11 @@ project_name_for_log = "my_project_name"
 ### logs to terminal if True, silent if False
 verbose = True
 
+### When verbose is True, only show items that are not absolute dups or considered new files (collisions only)
+collisons_only = True
+
 ### if True  does moves/deletes - set to False for testing / dry runs 
-commit = False
+commit = True
 
 ### if True checks for fixity throughout sets -  if fixity found - doesn't move, just logs
 use_low_conf_fixity = True
@@ -261,5 +277,7 @@ use_low_conf_file_name = True
 ### if True checks for file_id (filename, no file extention) throughout sets - if fileid found - doesn't move, just logs
 use_low_conf_file_id = True
 
+### use to clear any existing logs before running - useful when going from commit = False to commit = True
+purge_logs = True
 
 process_sidecar_files(debug=False)
