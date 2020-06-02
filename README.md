@@ -71,21 +71,21 @@ When this is set to `True` every decision for every file is shown on screen. Its
 
 Having work through the set of files, it gives a sumamry: 
 
-`*** Results ***
+    *** Results ***
+    
+    Test run.
+    This is what will happen if you set commit to True
+    
+    Total files in master: 24338
+    Total files in sidecar: 25328
+    
+    Files deleted from sidecar as duplicate:: 23660
+    File ID exists elsewhere in the collection - no action: 176
+    Filename exists elsewhere in collection - no action: 1
+    Fixity exists elsewhere in collection - no action: 620
+    Files moved from sidecar to master (new content): 871
 
-Test run.
-This is what will happen if you set commit to True
-
-Total files in master: 24338
-Total files in sidecar: 25328
-
-Files deleted from sidecar as duplicate:: 23660
-File ID exists elsewhere in the collection - no action: 176
-Filename exists elsewhere in collection - no action: 1
-Fixity exists elsewhere in collection - no action: 620
-Files moved from sidecar to master (new content): 871
-
-Finished at 2020-06-03 10:08:35`
+    Finished at 2020-06-03 10:08:35
 
 The corresponding log files, one for each outcome, is found in the `logs` folder
 
