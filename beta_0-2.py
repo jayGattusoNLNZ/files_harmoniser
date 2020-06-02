@@ -110,7 +110,7 @@ def filename_exists(sidecar_filename, sidecar_filepath, sidecar_md5, commit=Fals
 		print (f"filename exists {sidecar_filename}")
 
 def fileid_exists(sidecar_fileid, sidecar_filepath, sidecar_md5, commit=False, verbose=False):
-	logfile = f"{os.path.join(logs_folder, project_name_for_log)}_#_filename_exists.log"
+	logfile = f"{os.path.join(logs_folder, project_name_for_log)}_#_fileid_exists.log"
 	
 	if not os.path.exists(logfile):
 		with open(logfile, 'a') as data:
@@ -139,6 +139,11 @@ def move_and_log(my_file, md5, commit=False, verbose=False):
 		if not os.path.exists(folder):
 			os.makedirs(folder)
 		shutil.move(os.path.join(sidecar, my_file), os.path.join(master, my_file)) 
+		new_hash = md5(os.path.join(master, my_file))
+		if not new_hash == md5:
+			print (f"Copying for file {os.path.join(master, my_file)} has not resulted in the same fixity/file as we started with")
+			print ("Quitting without completeing run.")
+
 	
 	if verbose and not collisons_only:
 		print (f"Moving new: {my_file}")
@@ -162,7 +167,13 @@ def do_purge_logs():
 
 
 def summeriser(master_files, sidecar_files):
+
 	print ("\n*** Results ***\n") 
+	if verbose:
+		print ("Test run.\nThis is what will happen if you set commit to True\n")
+	else:
+		print ("Commit run.\nThe following changes where made\n")
+
 	print (f"Total files in master: {len(master_files)}")
 	print (f"Total files in sidecar: {len(sidecar_files)}")
 	print ()
@@ -174,7 +185,23 @@ def summeriser(master_files, sidecar_files):
 				lines = [x for x in data.read().split("\n") if x != ""]
 			count = len(lines)-1
 			my_string = f.replace(f"{project_name_for_log}_#_", "").replace(".log", "").replace("_", " ").capitalize()
+
+			if my_string == "Deleted files":
+				my_string = "Files deleted from sidecar as duplicate"
+			elif my_string == "Filename exists":
+				my_string = "Filename exists elsewhere in collection - no action"
+			elif my_string == "Fixity exists content different locations":
+				my_string = "Fixity exists elsewhere in collection - no action"
+			elif my_string == "Moved files":
+				my_string = "Files moved from sidecar to master (new content)"
+			elif my_string == "Fileid exists":
+				my_string = "File ID exists elsewhere in the collection"
+			elif my_string == "Filepath exists content changed":
+				my_string = "File exists in master but has different fixity - no action"
 			print (f"{my_string}: {count}")
+	print ()
+	print (f"Finished at {str(datetime.datetime.now())[:-7]}")
+	print ()
 
 
 
@@ -260,10 +287,10 @@ def process_sidecar_files(debug=False):
 master = r"C:\projects\ghost_collections\rebuilds\socials\master"
 
 ### set to the folder you want to merge
-sidecar = r"C:\projects\ghost_collections\rebuilds\socials\side_car_1"
+sidecar = r"C:\projects\ghost_collections\rebuilds\socials\ftp"
 
 ### set to a useful name for your project   
-project_name_for_log = "socials"
+project_name_for_log = "ftp"
 
 
 
@@ -285,7 +312,7 @@ verbose = True
 collisons_only = True
 
 ### if True  does moves/deletes - set to False for testing / dry runs 
-commit = True
+commit = False
 
 ### if True checks for fixity throughout sets -  if fixity found - doesn't move, just logs
 use_low_conf_fixity = True
