@@ -123,7 +123,7 @@ def fileid_exists(sidecar_fileid, sidecar_filepath, sidecar_md5, commit=False, v
 	if verbose:
 		print (f"File ID exists {sidecar_fileid}")
 
-def move_and_log(my_file, md5, commit=False, verbose=False):
+def move_and_log(my_file, my_md5, commit=False, verbose=False):
 
 	logfile = f"{os.path.join(logs_folder, project_name_for_log)}_#_moved_files.log"
 
@@ -132,7 +132,7 @@ def move_and_log(my_file, md5, commit=False, verbose=False):
 			data.write(f"Sidecar Filename|MD5|Date/Time\n")
 
 	with open(logfile, 'a') as data:
-		data.write(f"{my_file}|{md5}|{datetime.datetime.now()}\n")
+		data.write(f"{my_file}|{my_md5}|{datetime.datetime.now()}\n")
 	
 	if commit:
 		folder, __ = os.path.join(master, my_file).rsplit(os.sep, 1)
@@ -140,7 +140,7 @@ def move_and_log(my_file, md5, commit=False, verbose=False):
 			os.makedirs(folder)
 		shutil.move(os.path.join(sidecar, my_file), os.path.join(master, my_file)) 
 		new_hash = md5(os.path.join(master, my_file))
-		if not new_hash == md5:
+		if not new_hash == my_md5:
 			print (f"Copying for file {os.path.join(master, my_file)} has not resulted in the same fixity/file as we started with")
 			print ("Quitting without completeing run.")
 
@@ -159,7 +159,7 @@ def delete_empty_folders():
 
 def do_purge_logs():
 	for f in os.listdir(logs_folder):
-		if f.startswith(project_name_for_log):
+		if f.startswith(project_name_for_log+"_#_"):
 			log_path = os.path.join(logs_folder, f)
 			print (f"Purged log file {f}")
 			os.remove(log_path)
@@ -178,7 +178,7 @@ def summeriser(master_files, sidecar_files):
 	print (f"Total files in sidecar: {len(sidecar_files)}")
 	print ()
 	for f in os.listdir(logs_folder):
-		if f.startswith(project_name_for_log):
+		if f.startswith(project_name_for_log+"_#_"):
 			log_path = os.path.join(logs_folder, f)
 
 			with open(log_path) as data:
@@ -284,13 +284,13 @@ def process_sidecar_files(debug=False):
 
 
 ### set to the full path of the canonical master
-master = r"C:\projects\ghost_collections\rebuilds\socials\master"
+master = r"E:\ghost_collections\socials\master"
 
 ### set to the folder you want to merge
-sidecar = r"C:\projects\ghost_collections\rebuilds\socials\ftp"
+sidecar = r"E:\ghost_collections\socials\ftp"
 
 ### set to a useful name for your project   
-project_name_for_log = "ftp"
+project_name_for_log = "temp"
 
 
 
